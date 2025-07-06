@@ -3,7 +3,4 @@ services:
     name: h1b-connect
     env: python
     buildCommand: pip install -r requirements.txt
-    startCommand: streamlit run h1b_connect_app.py --server.port=$PORT
-    envVars:
-      - key: PYTHONUNBUFFERED
-        value: "1"
+    startCommand: streamlit run h1b_connect_app.py --server.port=$PORT --server.headless=true
