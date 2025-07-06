@@ -21,6 +21,7 @@ if sector:
         response = requests.get(search_url, headers=headers, timeout=10)
         soup = BeautifulSoup(response.text, "html.parser")
 
+        # Warning: Table is loaded dynamically via JavaScript, this may not return real data
         table = soup.find("table", {"class": "tbl"})
         rows = table.find_all("tr")[1:11] if table else []
 
@@ -29,6 +30,17 @@ if sector:
             cols = [col.get_text(strip=True) for col in row.find_all("td")]
             if cols:
                 data.append(cols[:4])
+
+        if not data:
+            st.warning("⚠️ Could not retrieve real data (page content is likely loaded by JavaScript). Showing example data instead.")
+            data = [
+                ["Amazon.com Services LLC", "Data Scientist", "Seattle, WA", "120"],
+                ["Google LLC", "Machine Learning Engineer", "Mountain View, CA", "75"],
+                ["Meta Platforms Inc", "Quantitative Analyst", "Menlo Park, CA", "50"],
+                ["Deloitte Consulting LLP", "Consultant", "New York, NY", "85"],
+                ["Goldman Sachs & Co", "Quant Analyst", "New York, NY", "60"]
+            ]
+
         df = pd.DataFrame(data, columns=["Employer", "Job Title", "Location", "Hires"])
         st.dataframe(df)
 
@@ -38,6 +50,7 @@ if sector:
             q = f'site:linkedin.com/in "{row["Employer"]}" "{title}"'
             url = f"https://www.google.com/search?q={urllib.parse.quote(q)}"
             st.markdown(f"- 🔗 [Search: {row['Employer']} – {title}]({url})")
+
     except Exception as e:
         st.error(f"Error: {e}")
 else:
