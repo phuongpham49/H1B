@@ -35,7 +35,7 @@ if sector:
         st.markdown("### Step 2: LinkedIn Contacts")
         for _, row in df.iterrows():
             title = job_title or row["Job Title"]
-            q = f"site:linkedin.com/in \\"{row['Employer']}\\" \\"{title}\\""
+            q = f'site:linkedin.com/in "{row["Employer"]}" "{title}"'
             url = f"https://www.google.com/search?q={urllib.parse.quote(q)}"
             st.markdown(f"- 🔗 [Search: {row['Employer']} – {title}]({url})")
     except Exception as e:
